@@ -1,9 +1,15 @@
 // Run sam-pattern.scd first.
 
 (
-var stom1, stom2, verbL, verbR, latoon, hafen, woonglong, coint, ende = 0;
-var gate = Array.newFrom(Array[0,0,0,0,0,1,1,0,0,0]);
+var stom1, stom2, verbL, verbR, latoon, hafen, woonglong, coint, freeverb, ende = 0;
+var gate = Array.newFrom(Array[0,0,0,0,0,1,1,1,1,1]);
 var syn = Array.newClear(10);
+
+// Length check
+var bh, bm, bs, eh, em, es;
+bh = Date.getDate.format("%I").asInteger;
+bm = Date.getDate.format("%M").asInteger;
+bs = Date.getDate.format("%S").asInteger;
 
 
 f = fork{
@@ -99,6 +105,7 @@ f = fork{
 
 	~pat[1].play;
 	10.wait;
+	~pat[1].stream = ~stream[1, 1]; // fade out
 
 	// <<
 	if(gate[5] == 1,{
@@ -110,9 +117,11 @@ f = fork{
 
 			});
 
-			if (i > 6, {coint.set(\amp, (0.5 + ((i-6) * 0.1) + ((i-6) + 0.01)));
-				("amp: " + (0.5 + ((i-6) * 0.1) + ((i-6) + 0.01))).postln;
+			if (i > 6, {coint.set(\amp, (0.5 + ((i-6) * 0.06) + ((i-6) + 0.01)));
+				("amp: " + (0.5 + ((i-6) * 0.06) + ((i-6) + 0.01))).postln;
 			});
+
+				if (i == 7, {~pat[0].stop;});
 
 			(case
 				// { i == 5 } {coint.set(\rateFreq, 1); i.postln;}
@@ -141,26 +150,103 @@ f = fork{
 		});
 	});
 
+		3.3.wait;
 
 	if(gate[6] == 1,{
 		"Seq 6 Start.".postln;
 		1.do({|i|
+
+
 				coint.set(\trigF, 1/40);
+
+				1.7.wait;
+				verbL.release(2);
+				verbR.release(4);
+				stom1.free;
+				stom2.free;
+
+
+				freeverb = Synth(\FreeVerb, [\outbus, 0, \inbus, 54], addAction:\addToTail);
+				~pat[2].stream = ~stream[2,0];
 				~pat[2].play;
 
 				latoon.free;
 
 				~pat[0].stream = ~stream[0,4];
 				~pat[0].play;
-				40.wait;
+				38.3.wait;
+				coint.set(\trigF, 1/80);
+				7.wait;
+
+				~pat[2].stream = ~stream[2,1]; //Freq incresing
+				23.wait;
+				~pat[2].stream = ~stream[2,2]; //Freq fix
+				freeverb.set(\mix, 0.3 + rrand(0.1, -0.1), \room, 0.8 + rrand(0.1, -0.1));
+				10.wait;
+		});
+	});
+
+
+	if(gate[7] == 1,{
+			var ampval = 15;
+		"Seq 7 Start.".postln;
+		20.do({|i|
+				ampval = ampval - 0.5;
+
+				i.postln;
+				("ampval: " ++ ampval).postln;
+
+
+				if (i >= 1, {coint.set(\amp, ampval) });
+
+				if (i == 3, {~pat[0].stream = ~stream[0,5];}); // amp fadeout
+
+				if (i == 19, {
+					coint.release(4);
+					~pat[2].stream = ~stream[2,3];
+				});
 
 		});
 	});
 
 
+	if(gate[8] == 1,{
+		"Seq 8 Start.".postln;
+		1.do({|i|
+				9.wait;
+				~pat[2].stream = ~stream[2,4];
+				40.wait;
+				~pat[2].stream = ~stream[2,5];
+				30.wait;
+		});
+	});
+
+
+	if(gate[9] == 1,{
+		"Seq 9 Start.".postln;
+		1.do({|i|
+				coinend = Synth(\coinend, [\out, 0, \bufnum, ~buf_1]);
+				7.wait;
+				coinend.release(1);
+		});
+	});
+
+
+		3.wait;
+		~pat[2].stop;
+
 };
 
 "Das Ende.".postln;
+
+// Length check
+eh = Date.getDate.format("%I").asInteger;
+em = Date.getDate.format("%M").asInteger;
+es = Date.getDate.format("%S").asInteger;
+
+("Length - "++(eh - bh)++":"++(em - bm)++":"++(es - bs)).postln;
+
+
 };
 
 

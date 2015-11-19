@@ -129,7 +129,7 @@ SynthDef("help-TCoin", { arg out=0, prob=0.5;
 
 // Synthdef 9
 SynthDef(\film,{
-	arg freq = 1, ffreq = 100, rq = 0.05, amp = 0.6, gate = 1, out = 0;
+	arg freq = 1, ffreq = 100, rq = 0.05, amp = 0.6, gate = 1, out = 54;
 	var sig1, sig2, sig3, sigsum, fil, env;
 	sig1 = Impulse.ar(freq);
 	sig2 = LFPulse.ar(freq, 0.1);
@@ -144,7 +144,7 @@ SynthDef(\film,{
 // Synthdef 10
 SynthDef(\coint,
 	{
-		arg freq = 100, bufnum = ~buf_1, trigF = 1/8, rateFreq = 2, gate = 1, amp = 0.5, out = 0, rateNum = 0;
+		arg freq = 100, bufnum = b, trigF = 1/8, rateFreq = 2, gate = 1, amp = 0.5, out = 0, rateNum = 0;
 		var sig, env, rate, rates;
 		rates = [
 			LFNoise0.kr(rateFreq, add: 1),
@@ -168,6 +168,32 @@ SynthDef(\stom,{
 	sumSig = Mix.ar([inSig_1, inSig_2]);
 	Out.ar(outBus, inSig_1);
 }).add;
+
+
+// SynthDef 12 - reverb
+SynthDef(\FreeVerb, {|inbus = 54, outbus = 0, mix = 0.25, room = 0.15, damp = 0.5, amp = 1.0|
+    var signal;
+
+    signal = In.ar(inbus, 2);
+
+	Out.ar(outbus,
+        FreeVerb2.ar( // FreeVerb2 - true stereo UGen
+            signal[0], // Left channel
+            signal[1], // Right Channel
+            mix, room, damp, amp)); // same params as FreeVerb 1 chn version
+
+}).add;
+
+// SynthDef 13
+SynthDef(\coinend, {| out = 0, bufnum, gate = 1 |
+    var rate, env;
+	env = EnvGen.kr(Env.asr, gate, doneAction: 2);
+	rate = LFPar.kr(1/20);
+    Out.ar(out,
+		        env * PlayBuf.ar(1, bufnum, rate, 1.0, 0, 1, 2)
+    )
+}).add;
+
 
 ) //Synthdef END
 
@@ -210,12 +236,12 @@ SynthDef(\delay, {
 
 
 (
-SynthDef(\FreeVerb2x2, {|outbus, mix = 0.25, room = 0.15, damp = 0.5, amp = 1.0|
+SynthDef(\FreeVerb, {|inbus = 54, outbus = 0, mix = 0.25, room = 0.15, damp = 0.5, amp = 1.0|
     var signal;
 
-    signal = In.ar(outbus, 2);
+    signal = In.ar(inbus, 2);
 
-    ReplaceOut.ar(outbus,
+	Out.ar(outbus,
         FreeVerb2.ar( // FreeVerb2 - true stereo UGen
             signal[0], // Left channel
             signal[1], // Right Channel
@@ -224,7 +250,8 @@ SynthDef(\FreeVerb2x2, {|outbus, mix = 0.25, room = 0.15, damp = 0.5, amp = 1.0|
 }).add;
 )
 
-a = Synth(\FreeVerb2x2, [\outbus, 0], addAction:\addToTail)
+a = Synth(\FreeVerb, [\outbus, 0], addAction:\addToTail)
+~pat[2].play;
 a.set(\mix, 0.3, \room, 0.8)
 
 a = Synth(\delay, [\in, 100])
@@ -249,7 +276,7 @@ d = Pbind(\instrument, \film,
 	\amp, 0.3,
 	\level, Prand([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], inf),
 	\relTime, Prand((0.08, 0.09 .. 0.5), inf),
-	\out, 0
+	\out, 54
 
 ).play;
 )
@@ -292,30 +319,23 @@ d.set
 
 b = Buffer.read(s, "/Users/giy/Music/SuperCollider Recordings/coin_.aiff"); // remember to free the buffer later.
 b.play;
-
+{LFPar.kr(1)}.plot(1, minval: -1, maxval: 1);
+{VarSaw.kr(1/20, 0.5)}.plot(20, minval: -1, maxval: 1);
+{LFSaw.kr(1, add: 0)}.plot(1, minval: -1, maxval: 1);
 (
-
-SynthDef(\coint,
-	{
-		arg freq = 100, bufnum = b, trigF = 1/8, rateFreq = 2, gate = 1, amp = 0.5, out = 0, rateNum = 0;
-		var sig, env, rate, rates;
-		rates = [
-			LFNoise0.kr(rateFreq, add: 1),
-			LFClipNoise.kr(SinOsc.kr(rateFreq).range(2, 9)),
-			LFPulse.kr(rateFreq),
-			LFPulse.kr(SinOsc.kr(rateFreq).range(2, 9)),
-			LFNoise1.kr(rateFreq)
-		];
-		sig = PlayBuf.ar(1, bufnum, BufRateScale.kr(bufnum) * Select.kr(rateNum, rates), LFPulse.kr(trigF), loop: 1, doneAction:2);
-		env = EnvGen.kr(Env.adsr, gate, doneAction: 2);
-		Out.ar(out, Pan2.ar(sig * env, 0, amp));
-}).add;
+SynthDef(\coinend, {| out = 0, bufnum = ~buf_1 |
+    var rate;
+	    rate = LFPar.kr(1/20);
+    Out.ar(out,
+		        PlayBuf.ar(1, bufnum, rate, 1.0, 0, 1, 2)
+    )
+})add;
 )
 
-c = Synth(\coint, [\amp, 1.5, \bufnum, ~buf_1, \rateNum, 2, \rateFreq, 1, \trigF, 1/8]);
+c = Synth(\coinend);
 c.set(\rateFreq, 0.95)
-c.set(\trigF, 1/40)
-c.set(\rateNum, 2)
+c.set(\trigF, 0)
+c.set(\rateNum, 5)
 c.set(\amp, 4.5)
 b.free;
 
