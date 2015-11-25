@@ -107,7 +107,7 @@ SynthDef(\woonglong,
 
 
 // Synthdef 7
-SynthDef(\dirac, {| out, amp = 0.03, freq = 100, decay = 0.01, pos = -1 |
+SynthDef(\dirac, {| out = 0, amp = 0.03, freq = 100, decay = 0.01, pos = -1 |
 		var i = Impulse.ar(0), sig;
 //		sig = Mix.fill(6, {Ringz.ar(i, Rand(freq, freq*[1.5, 2]), decay)});
 		sig = Mix.fill(6, {Ringz.ar(i, Rand(freq, freq*1.5), decay)});
@@ -186,7 +186,7 @@ SynthDef(\stom,{
 
 
 // SynthDef 12 - reverb
-SynthDef(\FreeVerb, {|inbus = 54, outbus = 0, mix = 0.25, room = 0.15, damp = 0.5, amp = 1.0|
+SynthDef(\FreeVerb, {|inbus = 54, outbus = 32, mix = 0.25, room = 0.15, damp = 0.5, amp = 1.0|
     var signal;
 
     signal = In.ar(inbus, 2);
@@ -208,6 +208,16 @@ SynthDef(\coinend, {| out = 0, bufnum, gate = 1 |
 	sigD = DelayN.ar(sig, 0.6, 0.6, add: sig*0.3);
 	Out.ar(out, [env * sig, env * sigD * Line.kr(0.2, 1.2, 5)]);
 }).add;
+
+
+// SynthDef 14 - Limiter
+SynthDef(\limiter, {| inbus = 32, out = 0, bufnum, gate = 1 |
+    var in, sig;
+	in = In.ar(inbus, 2);
+	sig = Limiter.ar(in, 0.5, 0.02);
+	Out.ar(out, sig);
+}).add;
+
 
 
 ) //Synthdef END

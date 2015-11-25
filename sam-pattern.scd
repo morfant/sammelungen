@@ -111,7 +111,8 @@ patNum.do{|i| (strNum).do{|j| ~stream[i,j] = Routine.new({});}};
 		\freq,	Pbeta(500, 5000, 0.2, 0.3),
 		\amp,	Pbeta(0.05, 0.1, 0.2, 0.2),
 //		\pos,	Pbeta(0, 2, 0.2, 0.2) //주로 앞에서 나다가 가끔씩 뒤에서 나는 효과
-	\pos,	Prand([-1, 1], inf) //100개의 이벤트 만에 한바퀴를 도는 panning
+	\pos,	Prand([-1, 1], inf), //100개의 이벤트 만에 한바퀴를 도는 panning,
+	\out, 0
 ).asStream;
 
 
@@ -122,7 +123,8 @@ patNum.do{|i| (strNum).do{|j| ~stream[i,j] = Routine.new({});}};
 		\freq,	Pbeta(500, 5000, 0.2, 0.3),
 	\amp,	Pseq((0.2, 0.19..0.0), 21),
 //		\pos,	Pbeta(0, 2, 0.2, 0.2) //주로 앞에서 나다가 가끔씩 뒤에서 나는 효과
-	\pos,	Prand([-1, 1], inf) //100개의 이벤트 만에 한바퀴를 도는 panning
+	\pos,	Prand([-1, 1], inf), //100개의 이벤트 만에 한바퀴를 도는 panning
+	\out, 0
 ).asStream;
 
 

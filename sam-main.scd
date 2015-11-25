@@ -15,9 +15,11 @@ bs = Date.getDate.format("%S").asInteger;
 f = fork{
 	1.do{
 
+
 	if(gate[0] == 1,{
 		"Seq 0 Start.".postln;
 		4.do({
+			~pat[1].stream = ~stream[1,0];
 			~pat[1].play;
 			2.wait;
 			~pat[1].stop;
@@ -165,8 +167,7 @@ f = fork{
 				stom1.free;
 				stom2.free;
 
-
-				~freeverb = Synth(\FreeVerb, [\outbus, 0, \inbus, 54], addAction:\addToTail);
+				~freeverb = Synth(\FreeVerb, [\outbus, 0, \inbus, 54], addAction:'addToTail');
 				~pat[2].stream = ~stream[2,0];
 				~pat[2].play;
 
@@ -202,7 +203,7 @@ f = fork{
 				if (i == 3, {~pat[0].stream = ~stream[0,5];}); // amp fadeout
 
 				if (i == 19, {
-					coint.release(4);
+					coint.release(6);
 					~pat[2].stream = ~stream[2,3];
 				});
 
@@ -215,9 +216,9 @@ f = fork{
 		1.do({|i|
 				9.wait;
 				~pat[2].stream = ~stream[2,4];
-				30.wait;
+				40.wait;
 				~pat[2].stream = ~stream[2,5];
-				10.wait;
+				8.wait;
 				~read.value;
 		});
 	});
