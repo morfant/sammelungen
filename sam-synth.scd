@@ -141,6 +141,21 @@ SynthDef(\film,{
 
 	}).add;
 
+// Synthdef 9-1, pan adjustable
+SynthDef(\filmPan,{
+	arg freq = 1, ffreq = 100, rq = 0.05, amp = 0.6, pan = 0, gate = 1, out = 54;
+	var sig1, sig2, sig3, sigsum, fil, env;
+	sig1 = Impulse.ar(freq);
+	sig2 = LFPulse.ar(freq, 0.1);
+	sig3 = Pulse.ar(freq, 0.3, mul: 0.01);
+	sigsum = sig1 + sig2 + sig3;
+	fil = BPF.ar(sigsum, ffreq, rq, add: sigsum * 0.7);
+	env = EnvGen.kr(Env.perc(0.01, 0.2), gate, doneAction: 2);
+	Out.ar(out, Pan2.ar(fil * env, pan, amp));
+
+	}).add;
+
+
 // Synthdef 10
 SynthDef(\coint,
 	{
@@ -186,12 +201,12 @@ SynthDef(\FreeVerb, {|inbus = 54, outbus = 0, mix = 0.25, room = 0.15, damp = 0.
 
 // SynthDef 13
 SynthDef(\coinend, {| out = 0, bufnum, gate = 1 |
-    var rate, env;
+    var sig, sigD, rate, env;
 	env = EnvGen.kr(Env.asr, gate, doneAction: 2);
 	rate = LFPar.kr(1/20);
-    Out.ar(out,
-		        env * PlayBuf.ar(1, bufnum, rate, 1.0, 0, 1, 2)
-    )
+	sig = PlayBuf.ar(1, bufnum, rate, 1.0, 0, 1, 2);
+	sigD = DelayN.ar(sig, 0.6, 0.6, add: sig*0.3);
+	Out.ar(out, [env * sig, env * sigD * Line.kr(0.2, 1.2, 5)]);
 }).add;
 
 
@@ -200,7 +215,7 @@ SynthDef(\coinend, {| out = 0, bufnum, gate = 1 |
 
 
 
-
+c = Synth(\coinend, [\out, 0, \bufnum, ~buf_1]);
 
 
 

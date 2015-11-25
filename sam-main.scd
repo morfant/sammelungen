@@ -1,8 +1,8 @@
 // Run sam-pattern.scd first.
 
 (
-var stom1, stom2, verbL, verbR, latoon, hafen, woonglong, coint, freeverb, ende = 0;
-var gate = Array.newFrom(Array[0,0,0,0,0,1,1,1,1,1]);
+var stom1, stom2, verbL, verbR, latoon, hafen, woonglong, coint, coinend, ende = 0;
+var gate = Array.newFrom(Array[1,1,1,1,1,1,1,1,1,1]);
 var syn = Array.newClear(10);
 
 // Length check
@@ -166,7 +166,7 @@ f = fork{
 				stom2.free;
 
 
-				freeverb = Synth(\FreeVerb, [\outbus, 0, \inbus, 54], addAction:\addToTail);
+				~freeverb = Synth(\FreeVerb, [\outbus, 0, \inbus, 54], addAction:\addToTail);
 				~pat[2].stream = ~stream[2,0];
 				~pat[2].play;
 
@@ -181,7 +181,7 @@ f = fork{
 				~pat[2].stream = ~stream[2,1]; //Freq incresing
 				23.wait;
 				~pat[2].stream = ~stream[2,2]; //Freq fix
-				freeverb.set(\mix, 0.3 + rrand(0.1, -0.1), \room, 0.8 + rrand(0.1, -0.1));
+				~freeverb.set(\mix, 0.3 + rrand(0.1, -0.1), \room, 0.8 + rrand(0.1, -0.1));
 				10.wait;
 		});
 	});
@@ -215,9 +215,10 @@ f = fork{
 		1.do({|i|
 				9.wait;
 				~pat[2].stream = ~stream[2,4];
-				40.wait;
-				~pat[2].stream = ~stream[2,5];
 				30.wait;
+				~pat[2].stream = ~stream[2,5];
+				10.wait;
+				~read.value;
 		});
 	});
 
