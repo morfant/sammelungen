@@ -5,13 +5,20 @@ var files, usingFile, pline, cline, file, freader, fsize, timediv = 50, datares 
 
 files = Array.newClear(5);
 files = [
-	"/Users/giy/Desktop/wesa/data/411_jindoVTS.txt",
-	"/Users/giy/Desktop/wesa/data/416_haesubu3.txt",
-	"/Users/giy/Desktop/wesa/data/416_jindoVTS.txt",
-	"/Users/giy/Desktop/wesa/data/416_militryradar.txt",
-	"/Users/giy/Desktop/wesa/data/416_recovered.txt"
+		// "/Users/giy/Desktop/wesa/data/411_jindoVTS.txt",
+		// "/Users/giy/Desktop/wesa/data/416_haesubu3.txt",
+		// "/Users/giy/Desktop/wesa/data/416_jindoVTS.txt",
+		// "/Users/giy/Desktop/wesa/data/416_militryradar.txt",
+		// "/Users/giy/Desktop/wesa/data/416_recovered.txt"
+
+	"/Users/giy/Downloads/sammelungen-master/sewol_route_data/411_jindoVTS.txt",
+	"/Users/giy/Downloads/sammelungen-master/sewol_route_data/416_haesubu3.txt",
+	"/Users/giy/Downloads/sammelungen-master/sewol_route_data/416_jindoVTS.txt",
+	"/Users/giy/Downloads/sammelungen-master/sewol_route_data/416_militryradar.txt",
+	"/Users/giy/Downloads/sammelungen-master/sewol_route_data/416_recovered.txt"
 ];
 
+	// "/Users/giy/Downloads/sammelungen-master/sewol_route_data/411_jindoVTS.txt"
 usingFile = files[0]; //change file number 0 ~ 4
 ("######START File:" + usingFile + "######").postln;
 
