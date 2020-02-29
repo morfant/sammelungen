@@ -1,4 +1,4 @@
-# sammelungen
+# There are lights that never go out (sammelungen)
 
 1. run 'sam-readFile.scd'
 	set abspath to read data files.
