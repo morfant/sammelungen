@@ -5,21 +5,15 @@ var files, usingFile, pline, cline, file, freader, fsize, timediv = 50, datares 
 
 files = Array.newClear(5);
 files = [
-		// "/Users/giy/Desktop/wesa/data/411_jindoVTS.txt",
-		// "/Users/giy/Desktop/wesa/data/416_haesubu3.txt",
-		// "/Users/giy/Desktop/wesa/data/416_jindoVTS.txt",
-		// "/Users/giy/Desktop/wesa/data/416_militryradar.txt",
-		// "/Users/giy/Desktop/wesa/data/416_recovered.txt"
-
-	"/Users/giy/Downloads/sammelungen-master/sewol_route_data/411_jindoVTS.txt",
-	"/Users/giy/Downloads/sammelungen-master/sewol_route_data/416_haesubu3.txt",
-	"/Users/giy/Downloads/sammelungen-master/sewol_route_data/416_jindoVTS.txt",
-	"/Users/giy/Downloads/sammelungen-master/sewol_route_data/416_militryradar.txt",
-	"/Users/giy/Downloads/sammelungen-master/sewol_route_data/416_recovered.txt"
+	"411_jindoVTS.txt",
+	"416_haesubu3.txt",
+	"416_jindoVTS.txt",
+	"416_militryradar.txt",
+	"416_recovered.txt"
 ];
 
-	// "/Users/giy/Downloads/sammelungen-master/sewol_route_data/411_jindoVTS.txt"
-usingFile = files[0]; //change file number 0 ~ 4
+
+usingFile = thisProcess.nowExecutingPath.dirname ++ '/data/' ++ files[0]; //change file number 0 ~ 4
 ("######START File:" + usingFile + "######").postln;
 
 fts = {arg time;
@@ -58,14 +52,14 @@ fork{
 		flng = lng.asFloat.round(datares);
 		flat = lat.asFloat.round(datares);
 
-		// flng
+		// flng : float longitude
 
 		flng = (flng - 120) * 1000;
 		flng = flng - 5000;
 				// flng = flng - 800;
 
 
-		// flat
+		// flat : float latitude
 				flat = (flat - 34);
 				// flat = flat/10;
 
@@ -92,4 +86,4 @@ fork{
 };
 );
 
-~read.value;
+// ~read.value;

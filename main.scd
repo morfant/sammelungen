@@ -1,4 +1,5 @@
-// Run sam-pattern.scd first.
+// 아래 괄호 안쪽에서 더블클릭, 괄호 안이 모두 선택되면, cmd + enter
+// 중지 : cmd + .
 
 (
 var stom1, stom2, verbL, verbR, latoon, hafen, woonglong, coint, coinend, ende = 0;
@@ -7,6 +8,13 @@ var syn = Array.newClear(10);
 
 // Length check
 var bh, bm, bs, eh, em, es;
+
+// excute another file script
+"sam-synth.scd".loadRelative;
+"sam-pattern.scd".loadRelative;
+"sam-readFile.scd".loadRelative;
+
+
 bh = Date.getDate.format("%I").asInteger;
 bm = Date.getDate.format("%M").asInteger;
 bs = Date.getDate.format("%S").asInteger;
@@ -252,6 +260,6 @@ es = Date.getDate.format("%S").asInteger;
 };
 
 
-//CmdPeriod.doOnce{~buf_1.free;};
+CmdPeriod.doOnce{~buf_1.free;};
 
 )

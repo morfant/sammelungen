@@ -7,8 +7,8 @@ t = TempoClock(1, 0, v);
 u = TempoClock(0.5, 0, v);
 
 // start two functions at beat zero in each clock.
-t.schedAbs(0, { arg beat, sec; b = Synth(\lfp); 1 });
-u.schedAbs(0, { arg beat, sec; d = Synth(\dirac); 1 });
+t.schedAbs(0, { arg beat, sec; b = Synth(\default, [\freq, 200]); 1 });
+u.schedAbs(0, { arg beat, sec; d = Synth(\default, [\freq, 1200]); 1 });
 )
 
 (

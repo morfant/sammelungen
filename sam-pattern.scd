@@ -213,5 +213,4 @@ patNum.do{|i| (strNum).do{|j| ~stream[i,j] = Routine.new({});}};
 patNum.do{|i| ~pat[i].stream = ~stream[i,0];};
 
 
-);
-
+)
